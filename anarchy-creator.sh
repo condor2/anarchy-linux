@@ -7,7 +7,7 @@
 ###
 ### By: Dylan Schacht (deadhead)
 ### Email: deadhead3492@gmail.com
-### Webpage: http://anarchy-linux.org
+### Webpage: https://anarchylinux.org
 ###
 ### Any questions, comments, or bug reports may be sent to above
 ### email address. Enjoy, and keep on using Anarchy.
@@ -18,10 +18,10 @@
 set_version() {
 
 	### Set the ISO release variable here:
-	export iso_rel="1.0.2"
+	export iso_rel="1.0.4"
 
 	### Note ISO label must remain 11 characters long:
-	export iso_label="ANARCHYV102"
+	export iso_label="ANARCHYV104"
 
 	### ISO name
 	case "$interface" in
@@ -51,13 +51,13 @@ init() {
 	### Array packages to be build and added to ISO local repo
 	export builds=(
 		'fetchmirrors'
-		'arch-wiki-cli'
 		'numix-icon-theme-git'
 		'numix-circle-icon-theme-git'
 		'oh-my-zsh-git'
 		'opensnap'
 		'perl-linux-desktopfiles'
-		'obmenu-generator' )
+		'obmenu-generator'
+		'yay')
 
 	check_depends
 	update_iso
@@ -248,7 +248,7 @@ build_sys() {
 	### Install fonts, fbterm, fetchmirrors, arch-wiki
 	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm -Sy terminus-font acpi zsh-syntax-highlighting pacman-contrib
 	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm -U /tmp/fetchmirrors/*.pkg.tar.xz
-	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm -U /tmp/arch-wiki-cli/*.pkg.tar.xz
+	### sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm -U /tmp/arch-wiki-cli/*.pkg.tar.xz
 	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf -Sl | awk '/\[installed\]$/ {print $1 "/" $2 "-" $3}' > "$customiso"/arch/pkglist.${sys}.txt
 	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm -Scc
 	sudo rm -f "$sq"/var/cache/pacman/pkg/*
@@ -279,7 +279,7 @@ build_sys_gui() {
 
 	### Install fonts, fbterm, fetchmirrors, arch-wiki, and uvesafb drivers onto system and cleanup
 	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm -Syu
-	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm --needed -Sy terminus-font xorg-server xorg-xinit xf86-video-vesa xf86-input-evdev xf86-input-keyboard xf86-input-mouse xf86-input-synaptics vlc galculator file-roller gparted gimp git pulseaudio pulseaudio-alsa alsa-utils \
+	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm --needed -Sy terminus-font xorg-server xorg-xinit xterm xf86-video-vesa xf86-input-evdev xf86-input-keyboard xf86-input-mouse xf86-input-synaptics vlc galculator file-roller gparted gimp git pulseaudio pulseaudio-alsa alsa-utils \
 		zsh-syntax-highlighting pacman-contrib arc-gtk-theme elementary-icon-theme thunar base-devel gvfs xdg-user-dirs xfce4 xfce4-goodies libreoffice-fresh chromium virtualbox-guest-dkms virtualbox-guest-utils linux linux-headers libdvdcss simplescreenrecorder screenfetch htop acpi pavucontrol libutil-linux
 	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm -U /tmp/fetchmirrors/*.pkg.tar.xz
 	sudo pacman --root "$sq" --cachedir "$sq"/var/cache/pacman/pkg  --config $paconf --noconfirm -U /tmp/arch-wiki-cli/*.pkg.tar.xz
@@ -390,7 +390,7 @@ check_sums() {
 	sha1_sum=$(sha1sum "$version" | awk '{print $1}')
 	timestamp=$(timedatectl | grep "Universal" | awk '{print $4" "$5" "$6}')
 	echo "Checksums generated. Saved to $(sed 's/.iso//' <<<"$version")-checksums.txt"
-	echo -e "- Anarchy Linux is licensed under GPL v2\n- Webpage: http://anarchy-linux.org\n- ISO timestamp: $timestamp\n- $version Official Check Sums:
+	echo -e "- Anarchy Linux is licensed under GPL v2\n- Webpage: http://anarchylinux.org\n- ISO timestamp: $timestamp\n- $version Official Check Sums:
 	* md5sum: $md5_sum
 	* sha1sum: $sha1_sum" > "$(sed 's/.iso//' <<<"$version")-checksums.txt"
 

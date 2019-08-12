@@ -7,7 +7,7 @@
 ###
 ### By: Dylan Schacht (deadhead)
 ### Email: deadhead3492@gmail.com
-### Webpage: https://anarchy-linux.org
+### Webpage: https://anarchylinux.org
 ###
 ### Any questions, comments, or bug reports may be sent to above
 ### email address. Enjoy, and keep on using Arch.
@@ -40,7 +40,7 @@ configure_system() {
 	fi
 
 	if "$drm" ; then
-		sed -i 's/MODULES=""/MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"/' "$ARCH"/etc/mkinitcpio.conf
+    sed -i '/^MODULES=/ s/.$/ nvidia nvidia_modeset nvidia_uvm nvidia_drm )/;s/" /"/'
 		sed -i 's!FILES=""!FILES="/etc/modprobe.d/nvidia.conf"!' "$ARCH"/etc/mkinitcpio.conf
 		echo "options nvidia_drm modeset=1" > "$ARCH"/etc/modprobe.d/nvidia.conf
 
@@ -63,7 +63,7 @@ configure_system() {
 	fi
 
 	if "$enable_f2fs" ; then
-		sed -i '/MODULES=/ s/.$/ f2fs crc32 libcrc32c crc32c_generic crc32c-intel crc32-pclmul"/;s/" /"/' "$ARCH"/etc/mkinitcpio.conf
+		sed -i '/^MODULES=/ s/.$/ f2fs crc32 libcrc32c crc32c_generic crc32c-intel crc32-pclmul )/;s/" /"/' "$ARCH"/etc/mkinitcpio.conf
 		if ! "$crypted" ; then
 			arch-chroot "$ARCH" mkinitcpio -p "$kernel" &>/dev/null &
 			pid=$! pri=1 msg="\n$f2fs_config_load \n\n \Z1> \Z2mkinitcpio -p $kernel\Zn" load
@@ -71,8 +71,17 @@ configure_system() {
 		echo "$(date -u "+%F %H:%M") : Configure system for f2fs" >> "$log"
 	fi
 
+  if "$enable_xfs" ; then
+		sed -i '/^MODULES=/ s/.$/ xfs )/;s/" /"/' "$ARCH"/etc/mkinitcpio.conf
+		if ! "$crypted" ; then
+			arch-chroot "$ARCH" mkinitcpio -p "$kernel" &>/dev/null &
+			pid=$! pri=1 msg="\n$xfs_config_load \n\n \Z1> \Z2mkinitcpio -p $kernel\Zn" load
+		fi
+		echo "$(date -u "+%F %H:%M") : Configure system for xfs" >> "$log"
+	fi
+
 	if (<<<"$BOOT" egrep "nvme.*" &> /dev/null) then
-		sed -i 's/MODULES="/MODULES="nvme /;s/ "/"/' "$ARCH"/etc/mkinitcpio.conf
+		sed -i '/^MODULES=/ s/.$/ nvme )/;s/" /"/' "$ARCH"/etc/mkinitcpio.conf
 		if ! "$crypted" ; then
 			arch-chroot "$ARCH" mkinitcpio -p "$kernel" &>/dev/null &
 			pid=$! pri=1 msg="\n$kernel_config_load \n\n \Z1> \Z2mkinitcpio -p $kernel\Zn" load
@@ -184,9 +193,9 @@ configure_system() {
 		fi
 	fi
 
-	if "$add_repo" ; then
-		echo -e "\n[anarchy]\nServer = $aa_repo\nSigLevel = Never" >> "$ARCH"/etc/pacman.conf
-	fi
+	#if "$add_repo" ; then
+		#echo -e "\n[anarchy]\nServer = $aa_repo\nSigLevel = Never" >> "$ARCH"/etc/pacman.conf
+	#fi
 
 	if "$multilib" ; then
 		sed -i '/\[multilib]$/ {
@@ -196,7 +205,7 @@ configure_system() {
 	fi
 
 	if "$aa_repo" ; then
-		sed -i -e '$a\\n[anarchy]\nServer = https://anarchy-linux.org/repo/$arch\nSigLevel = Never' "$ARCH"/etc/pacman.conf
+		sed -i -e '$a\\n[anarchy]\nServer = https://anarchylinux.org/repo/$arch\nSigLevel = Never' "$ARCH"/etc/pacman.conf
 	fi
 
 	if "$dhcp" ; then

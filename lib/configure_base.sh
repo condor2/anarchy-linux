@@ -7,7 +7,7 @@
 ###
 ### By: Dylan Schacht (deadhead)
 ### Email: deadhead3492@gmail.com
-### Webpage: https://anarchy-linux.org
+### Webpage: https://anarchylinux.org
 ###
 ### Any questions, comments, or bug reports may be sent to above
 ### email address. Enjoy, and keep on using Arch.
@@ -232,10 +232,10 @@ prepare_base() {
 	    fi
 
 	if "$wifi" ; then
-		base_install+="wireless_tools wpa_supplicant wpa_actiond "
+		base_install+="wireless_tools wpa_supplicant "
 	else
 		if (dialog --defaultno --yes-button "$yes" --no-button "$no" --yesno "\n$wifi_option_msg" 10 60) then
-			base_install+="wireless_tools wpa_supplicant wpa_actiond "
+			base_install+="wireless_tools wpa_supplicant "
 		fi
 	fi
 
@@ -275,7 +275,6 @@ add_software() {
 			add_soft=true
 			if ! "$skip" ; then
 				software_menu=$(dialog --extra-button --extra-label "$install" --ok-button "$select" --cancel-button "$cancel" --menu "$software_type_msg" 21 63 12 \
-					"$aar"		"$aar_msg" \
 					"$audio"	"$audio_msg" \
 					"$database"	"$database_msg" \
 					"$fonts"	"$fonts_msg" \
@@ -300,59 +299,59 @@ add_software() {
 					fi
 				elif [ "$ex" -eq "3" ]; then
 					software_menu="$done_msg"
-				elif [ "$software_menu" == "$aar" ] && ! "$aa_repo" ; then
-					if (dialog --yes-button "$yes" --no-button "$no" --yesno "\n$aar_add_msg" 10 60) then
-						if ! (grep "\[anarchy\]" </etc/pacman.conf &>/dev/null); then
-							sed -i -e '$a\\n[anarchy]\nServer = https://anarchy-linux.org/repo/$arch\nSigLevel = Never' /etc/pacman.conf
-						fi
-						aa_repo=true
-					else
-						continue
-					fi
+				#elif [ "$software_menu" == "$aar" ] && ! "$aa_repo" ; then
+					#if (dialog --yes-button "$yes" --no-button "$no" --yesno "\n$aar_add_msg" 10 60) then
+						#if ! (grep "\[anarchy\]" </etc/pacman.conf &>/dev/null); then
+							#sed -i -e '$a\\n[anarchy]\nServer = https://anarchylinux.org/repo/$arch\nSigLevel = Never' /etc/pacman.conf
+						#fi
+						#aa_repo=true
+					#else
+						#continue
+					#fi
 				fi
 			else
 				skip=false
 			fi
 
 			case "$software_menu" in
-				"$aar")
-					software=$(dialog --ok-button "$ok" --cancel-button "$cancel" --checklist "$software_msg1" 20 63 10 \
-						"amarok"			"$aar2" OFF \
-						"android-sdk"			"$aar23" OFF \
-						"android-sdk-platform-tools"	"$aar24" OFF \
-						"arch-wiki-cli"			"$aar0" ON \
-						"brackets"			"$aar31" OFF \
-						"discord"			"$aar29" OFF \
-						"downgrade"			"$aar6" OFF \
-						"dolphin-libre"			"$aar7" OFF \
-						"dropbox"			"$aar25" OFF \
-						"fetchmirrors"			"$aar1" ON \
-						"fetchpkg"			"$aar8" ON \
-						"google-chrome"			"$aar9" OFF \
-						"google-earth"			"$aar10" OFF \
-						"inxi"				"$aar18" OFF \
-						"numix-circle-icon-theme-git"	"$aar11" OFF \
-						"numix-icon-theme-git"		"$aar12" OFF \
-						"octopi"			"$aar4" OFF \
-						"pamac-aur"			"$aar5" OFF \
-						"plex-media-server"		"$aar13" OFF \
-						"plymouth"			"$aar14" OFF \
-						"powerline-fonts-git"		"$aar15" OFF \
-						"scite"				"$aar28" OFF \
-						"skypeforlinux-stable-bin"	"$aar30" OFF \
-						"spotify"			"$aar16" OFF \
-						"sublime-text-dev"		"$aar17" OFF \
-						"tor-browser-en"		"$aar19" OFF \
-						"teamviewer"			"$aar27" OFF \
-						"virtualbox-ext-oracle"		"$aar20" OFF \
-						"vivaldi"			"$aar21" OFF \
-						"xmacro"			"$aar22" OFF \
-						"yay"				"$aar26" OFF \
-						"trizen"			"$aar3" OFF 3>&1 1>&2 2>&3)
-					if [ "$?" -gt "0" ]; then
-						add_soft=false
-					fi
-				;;
+				#"$aar")
+					#software=$(dialog --ok-button "$ok" --cancel-button "$cancel" --checklist "$software_msg1" 20 63 10 \
+						#"amarok"			"$aar2" OFF \
+						#"android-sdk"			"$aar23" OFF \
+						#"android-sdk-platform-tools"	"$aar24" OFF \
+						#"arch-wiki-cli"			"$aar0" ON \
+						#"brackets"			"$aar31" OFF \
+						#"discord"			"$aar29" OFF \
+						#"downgrade"			"$aar6" OFF \
+						#"dolphin-libre"			"$aar7" OFF \
+						#"dropbox"			"$aar25" OFF \
+						#"fetchmirrors"			"$aar1" ON \
+						#"fetchpkg"			"$aar8" ON \
+						#"google-chrome"			"$aar9" OFF \
+						#"google-earth"			"$aar10" OFF \
+						#"inxi"				"$aar18" OFF \
+						#"numix-circle-icon-theme-git"	"$aar11" OFF \
+						#"numix-icon-theme-git"		"$aar12" OFF \
+						#"octopi"			"$aar4" OFF \
+						#"pamac-aur"			"$aar5" OFF \
+						#"plex-media-server"		"$aar13" OFF \
+						#"plymouth"			"$aar14" OFF \
+						#"powerline-fonts-git"		"$aar15" OFF \
+						#"scite"				"$aar28" OFF \
+						#"skypeforlinux-stable-bin"	"$aar30" OFF \
+						#"spotify"			"$aar16" OFF \
+						#"sublime-text-dev"		"$aar17" OFF \
+						#"tor-browser-en"		"$aar19" OFF \
+						#"teamviewer"			"$aar27" OFF \
+						#"virtualbox-ext-oracle"		"$aar20" OFF \
+						#"vivaldi"			"$aar21" OFF \
+						#"xmacro"			"$aar22" OFF \
+						#"yay"				"$aar26" OFF \
+						#"trizen"			"$aar3" OFF 3>&1 1>&2 2>&3)
+					#if [ "$?" -gt "0" ]; then
+						#add_soft=false
+					#fi
+				#;;
 				"$audio")
 					software=$(dialog --ok-button "$ok" --cancel-button "$cancel" --checklist "$software_msg1" 20 63 10 \
 						"audacity"		"$audio0" OFF \
@@ -377,7 +376,6 @@ add_software() {
 					software=$(dialog --ok-button "$ok" --cancel-button "$cancel" --checklist "$software_msg1" 20 63 10 \
 						"couchdb"		"$db0" OFF \
 						"mariadb"		"$sys30" OFF \
-						"mongodb"		"$db1" OFF \
 						"percona-server"	"$db2" OFF \
 						"phpmyadmin"		"$sys32" OFF \
 						"php-sqlite"		"$db3" OFF \
@@ -385,6 +383,8 @@ add_software() {
 						"redis"			"$db4" OFF \
 						"rethinkdb"		"$db5" OFF\
 						"sqlite"		"$db6" OFF 3>&1 1>&2 2>&3)
+						# MongoDB has been removed from the official repositories due to its re-licensing issues
+						# "mongodb"		"$db1" OFF
 					if [ "$?" -gt "0" ]; then
 						add_soft=false
 					fi
@@ -496,7 +496,8 @@ add_software() {
 						"smplayer"				"$media4" OFF \
 						"snappy-player"				"$media11" OFF \
 						"totem"					"$media5" OFF \
-						"vlc"         	   			"$media6" OFF 3>&1 1>&2 2>&3)
+						"vlc"         	   			"$media6" OFF \
+						"youtube-dl" "$media12" OFF 3>&1 1>&2 2>&3)
 					if [ "$?" -gt "0" ]; then
 						add_soft=false
 					fi
@@ -541,8 +542,10 @@ add_software() {
 						"go-tools"		"$prg4" OFF \
 						"java-runtime-common"	"$prg5" OFF \
 						"java-openjdk-7"	"$prg6" OFF \
-						"java-openjdk-8"	"$prg7" OFF \
+						"jdk8-openjdk"	"$prg7" OFF \
 						"java-openjfx-8"	"$prg8" OFF \
+						"jdk11-openjdk" "$prg14" OFF \
+						"jdk-openjdk" "$prg15" OFF \
 						"perl"			"$prg9" OFF \
 						"php"			"$prg10" OFF \
 						"python"		"$prg11" OFF \
@@ -574,7 +577,6 @@ add_software() {
 						"pantheon-terminal"	"$term3" OFF \
 						"rxvt-unicode"		"$term4" OFF \
 						"screen"		"$sys11" OFF \
-						"st"			"$term8" OFF \
 						"terminator"		"$term5" OFF \
 						"terminology"		"$term10" OFF \
 						"termite"		"$term9" OFF \
